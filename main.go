@@ -1,10 +1,13 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
 	"strconv"
 	"strings"
-
-	"github.com/gofiber/fiber/v2"
 )
 
 type Order struct {
@@ -30,21 +33,27 @@ var noItem = 1
 var allItem = 0
 
 func main() {
-	app := fiber.New()
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.JSON(Orders)
-	})
-	app.Post("/", createOrder)
-	app.Listen(":8080")
+	var i string
+	fmt.Scan(&i)
+	file, err := os.Open("testdata/" + i + ".json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+	byteValue, _ := ioutil.ReadAll(file)
+	var info []Order
+	json.Unmarshal(byteValue, &info)
+
+	output, err := json.MarshalIndent(createOrder(info), "", "  ")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Print(string(output))
 }
 
-func createOrder(c *fiber.Ctx) error {
+func createOrder(input []Order) []CleanedOrder {
 	allItem = 0
 	noItem = 1
-	var input []Order
-	if err := c.BodyParser(&input); err != nil {
-		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
-	}
 	var allProductId []CleanedOrder
 	m := make(map[string]int)
 	for _, ProductId := range input {
@@ -62,7 +71,7 @@ func createOrder(c *fiber.Ctx) error {
 	for material, qty := range m {
 		product := &CleanedOrder{
 			No:         noItem,
-			ProductId:  material + "-CLEANER",
+			ProductId:  material + "-CLEANNER",
 			Qty:        qty,
 			UnitPrice:  0,
 			TotalPrice: 0,
@@ -70,9 +79,7 @@ func createOrder(c *fiber.Ctx) error {
 		noItem++
 		allProductId = append(allProductId, *product)
 	}
-
-	return c.JSON(allProductId)
-
+	return allProductId
 }
 
 func parceProductCode(order *Order, m map[string]int) []CleanedOrder {
@@ -100,11 +107,17 @@ func parceProductCode(order *Order, m map[string]int) []CleanedOrder {
 	for _, s := range item {
 		id, qty := extractNumberAndTrim(s)
 		parts := strings.Split(id, "-")
+		var modelId string
+		if len(parts) > 3 {
+			modelId = parts[2] + "-" + parts[3]
+		} else {
+			modelId = parts[2]
+		}
 		product := &CleanedOrder{
 			No:         noItem,
 			ProductId:  id,
 			MaterialId: parts[0] + "-" + parts[1],
-			ModelId:    parts[2],
+			ModelId:    modelId,
 			Qty:        order.Qty * qty,
 			UnitPrice:  float64(order.UnitPrice) / float64(sum),
 			TotalPrice: (float64(order.UnitPrice) / float64(sum)) * float64(order.Qty*qty),

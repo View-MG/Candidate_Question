@@ -1,0 +1,25 @@
+[
+  {
+    "no": 1,
+    "productId": "FG0A-MATTE-IPHONE16PROMAX",
+    "materialId": "FG0A-MATTE",
+    "modelId": "IPHONE16PROMAX",
+    "qty": 3,
+    "unitPrice": 30.00,
+    "totalPrice": 90.00
+  },
+  {
+    "no": 2,
+    "productId": "WIPING-CLOTH",
+    "qty": 3,
+    "unitPrice": 0.00,
+    "totalPrice": 0.00
+  },
+  {
+    "no": 3,
+    "productId": "MATTE-CLEANNER",
+    "qty": 3,
+    "unitPrice": 0.00,
+    "totalPrice": 0.00
+  }
+]

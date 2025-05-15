@@ -1,0 +1,25 @@
+[
+  {
+    "no": 1,
+    "productId": "FG0A-CLEAR-IPHONE16PROMAX",
+    "materialId": "FG0A-CLEAR",
+    "modelId": "IPHONE16PROMAX",
+    "qty": 2,
+    "unitPrice": 50.00,
+    "totalPrice": 100.00
+  },
+  {
+    "no": 2,
+    "productId": "WIPING-CLOTH",
+    "qty": 2,
+    "unitPrice": 0.00,
+    "totalPrice": 0.00
+  },
+  {
+    "no": 3,
+    "productId": "CLEAR-CLEANNER",
+    "qty": 2,
+    "unitPrice": 0.00,
+    "totalPrice": 0.00
+  }
+]
